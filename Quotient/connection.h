@@ -120,6 +120,7 @@ class QUOTIENT_API Connection : public QObject {
     Q_PROPERTY(QString deviceId READ deviceId NOTIFY stateChanged)
     Q_PROPERTY(QByteArray accessToken READ accessToken NOTIFY stateChanged)
     Q_PROPERTY(bool isLoggedIn READ isLoggedIn NOTIFY stateChanged STORED false)
+    Q_PROPERTY(bool isOnline READ isOnline NOTIFY isOnlineChanged)
     Q_PROPERTY(QString defaultRoomVersion READ defaultRoomVersion NOTIFY capabilitiesLoaded)
     Q_PROPERTY(QUrl homeserver READ homeserver WRITE setHomeserver NOTIFY homeserverChanged)
     Q_PROPERTY(QVector<GetLoginFlowsJob::LoginFlow> loginFlows READ loginFlows NOTIFY loginFlowsChanged)
@@ -332,6 +333,11 @@ public:
     QString deviceId() const;
     QByteArray accessToken() const;
     bool isLoggedIn() const;
+
+    //! \brief Whether the connection is successfully syncing with the server.
+    //!
+    //! \return true, if the last sync was successful, false otherwise.
+    bool isOnline() const;
     QOlmAccount* olmAccount() const;
     Database* database() const;
 
@@ -787,6 +793,10 @@ Q_SIGNALS:
     //! accessToken - these properties normally only change at
     //! a successful login and logout and are constant at other times.
     void stateChanged();
+
+    //! The online state has changed.
+    void isOnlineChanged();
+
     void loginError(QString message, QString details);
 
     //! \brief A network request (job) started by callApi() has failed

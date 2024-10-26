@@ -433,16 +433,22 @@ void Connection::sync(int timeout)
     connect(job, &SyncJob::success, this, [this, job] {
         onSyncSuccess(job->takeData());
         d->syncJob = nullptr;
+        d->lastSyncSuccessful = true;
+        emit isOnlineChanged();
         emit syncDone();
     });
     connect(job, &SyncJob::retryScheduled, this,
             [this, job](int retriesTaken, int nextInMilliseconds) {
+                d->lastSyncSuccessful = false;
+                emit isOnlineChanged();
                 emit networkError(job->errorString(), job->rawDataSample(),
                                   retriesTaken, nextInMilliseconds);
             });
     connect(job, &SyncJob::failure, this, [this, job] {
         // SyncJob persists with retries on transient errors; if it fails,
         // there's likely something serious enough to stop the loop.
+        d->lastSyncSuccessful = false;
+        emit isOnlineChanged();
         stopSync();
         if (job->error() == BaseJob::Unauthorised) {
             qCWarning(SYNCJOB)
@@ -1098,6 +1104,8 @@ QByteArray Connection::accessToken() const
 }
 
 bool Connection::isLoggedIn() const { return !accessToken().isEmpty(); }
+
+bool Connection::isOnline() const { return d->lastSyncSuccessful; }
 
 QOlmAccount* Connection::olmAccount() const
 {
