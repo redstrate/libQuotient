@@ -67,6 +67,7 @@ public:
     JobHandle<GetLoginFlowsJob> loginFlowsJob = nullptr;
 
     SyncJob* syncJob = nullptr;
+    bool lastSyncSuccessful = true;
     JobHandle<LogoutJob> logoutJob = nullptr;
 
     bool cacheState = true;
