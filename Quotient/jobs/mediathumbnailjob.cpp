@@ -22,7 +22,7 @@ QUrl MediaThumbnailJob::makeRequestUrl(const HomeserverData& hsData, const QStri
                                        std::optional<bool> animated)
 {
     QT_IGNORE_DEPRECATIONS( // For GetContentThumbnailJob
-        return hsData.checkMatrixSpecVersion(u"1.11")
+        return hsData.checkMatrixSpecVersion(u"v1.11")
                    ? GetContentThumbnailAuthedJob::makeRequestUrl(hsData, serverName, mediaId,
                                                                   requestedSize.width(),
                                                                   requestedSize.height(),
