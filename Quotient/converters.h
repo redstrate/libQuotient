@@ -160,16 +160,13 @@ namespace _impl {
 //! matching respective enum values, 0-based.
 //! \sa enumToJsonString
 template <typename EnumT, typename EnumStringValuesT>
-inline EnumT enumFromJsonString(const QString& s, const EnumStringValuesT& enumValues,
-                                EnumT defaultValue)
+inline std::optional<EnumT> enumFromJsonString(const QString& s, const EnumStringValuesT& enumValues)
 {
     static_assert(std::is_unsigned_v<std::underlying_type_t<EnumT>>);
     if (const auto it = std::ranges::find(enumValues, s); it != cend(enumValues))
         return static_cast<EnumT>(it - cbegin(enumValues));
 
-    if (!s.isEmpty())
-        _impl::warnUnknownEnumValue(s, qt_getEnumName(EnumT()));
-    return defaultValue;
+    return std::nullopt;
 }
 
 //! \brief Facility enum-to-string converter

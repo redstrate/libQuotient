@@ -8,8 +8,7 @@ using namespace Quotient;
 template <>
 RoomType Quotient::fromJson(const QJsonValue& jv)
 {
-    return enumFromJsonString(jv.toString(), RoomTypeStrings,
-                              RoomType::Undefined);
+    return enumFromJsonString<RoomType>(jv.toString(), RoomTypeStrings).or_else([] -> std::optional<RoomType> { return RoomType::Undefined; }).value();
 }
 
 bool RoomCreateEvent::isFederated() const
