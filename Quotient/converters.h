@@ -147,7 +147,6 @@ inline void fillFromJson(const QJsonValue& jv, T& pod)
 }
 
 namespace _impl {
-    QUOTIENT_API void warnUnknownEnumValue(const QString& stringValue, const char* enumTypeName);
     QUOTIENT_API void reportEnumOutOfBounds(uint32_t v, const char* enumTypeName);
 }
 
